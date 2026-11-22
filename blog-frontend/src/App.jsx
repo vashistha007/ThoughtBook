@@ -10,6 +10,7 @@ import PostDetail from './pages/PostDetail';
 import CreateEditPost from './pages/CreateEditPost';
 import ProfileDashboard from './pages/ProfileDashboard';
 import AdminCategories from './pages/AdminCategories';
+import ForgotPassword from './pages/ForgotPassword';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/posts/:id" element={<PostDetail />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
 
               <Route
                 path="/write"

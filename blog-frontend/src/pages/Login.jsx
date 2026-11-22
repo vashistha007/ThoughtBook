@@ -26,9 +26,9 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-[85vh] flex items-center justify-center px-4 py-12">
+    <div className="relative min-h-[85vh] flex items-center justify-center px-4 py-12 overflow-x-hidden">
       {/* Warm Gold & Coral Ambient Aura */}
-      <div className="pointer-events-none absolute w-[480px] h-[320px] bg-gradient-to-tr from-amber-500/20 via-orange-600/15 to-rose-600/20 blur-[110px] rounded-full -z-10" />
+      <div className="pointer-events-none absolute w-full max-w-[480px] h-[320px] bg-gradient-to-tr from-amber-500/20 via-orange-600/15 to-rose-600/20 blur-[110px] rounded-full -z-10" />
 
       <motion.div
         initial={{ opacity: 0, y: 28, scale: 0.96 }}
@@ -102,9 +102,19 @@ export default function Login() {
             <span>{submitting ? 'Authenticating...' : 'Sign In'}</span>
             {!submitting && <ArrowRight className="w-4 h-4" />}
           </motion.button>
+
+          {/* Forgot Password Button Below Sign In */}
+          <div className="text-center pt-1">
+            <Link
+              to="/forgot-password"
+              className="text-xs font-semibold text-amber-400 hover:text-amber-300 hover:underline transition"
+            >
+              Forgot your password?
+            </Link>
+          </div>
         </form>
 
-        <p className="text-center text-xs text-zinc-400 mt-7">
+        <p className="text-center text-xs text-zinc-400 mt-6 pt-5 border-t border-white/10">
           New to ThoughtBook?{' '}
           <Link to="/register" className="text-amber-400 font-semibold hover:text-amber-300 hover:underline">
             Create an account
