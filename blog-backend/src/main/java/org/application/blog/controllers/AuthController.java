@@ -6,6 +6,7 @@ import org.application.blog.dto.request.RegisterRequest;
 import org.application.blog.dto.response.JwtAuthResponse;
 import org.application.blog.entity.User;
 import org.application.blog.services.AuthService;
+import org.application.blog.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,8 @@ public class AuthController {
     private  UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private EmailService emailService;
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -58,6 +61,9 @@ public class AuthController {
         user.setResetOtp(otp);
         user.setOtpExpiry(LocalDateTime.now().plusMinutes(10));
         userRepository.save(user);
+
+        // Send real email to user's inbox
+        emailService.sendOtpEmail(email, otp);
 
         // Optional: Agar JavaMailSender configured hai toh email bhejo, warna logs par print hoga
         System.out.println("PASSWORD RESET OTP for " + email + " : " + otp);
