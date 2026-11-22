@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
 @layer base {
   body {
     background-color: #09090b;
@@ -28,4 +37,12 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #f59e0b;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

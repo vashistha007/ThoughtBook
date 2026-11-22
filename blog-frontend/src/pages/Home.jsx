@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axiosClient from '../api/axiosClient';
 import PostCard from '../components/PostCard';
-import { Search, ChevronLeft, ChevronRight, X, ArrowUpRight, Sparkles ,LayoutGrid} from 'lucide-react';
-
+import { Search, ChevronLeft, ChevronRight, X, ArrowUpRight, Sparkles,LayoutGrid } from 'lucide-react';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -104,7 +103,6 @@ export default function Home() {
       });
   };
 
-
   const [showTopicsModal, setShowTopicsModal] = useState(false);
 const [topicSearch, setTopicSearch] = useState('');
 const categoryScrollRef = useRef(null);
@@ -125,7 +123,6 @@ const scrollCategories = (direction) => {
 
       <div className="max-w-6xl mx-auto px-4 pt-12 pb-20">
         {/* Hero */}
-        {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
@@ -134,18 +131,18 @@ const scrollCategories = (direction) => {
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-xs text-amber-300 font-semibold mb-5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Where Curiosity Meets Storytelling</span>
+            <span>3D Interactive Engineering Publication</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white mb-4 leading-[1.1]">
-            Your Digital {' '}
-            <span className="bg-linear-to-r from-amber-300 via-orange-400 to-rose-500 bg-clip-text text-transparent">
-              Thought Space
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white mb-4 leading-[1.08]">
+            Ideas Forged in{' '}
+            <span className="bg-gradient-to-r from-amber-300 via-orange-400 to-rose-500 bg-clip-text text-transparent">
+              Code & Architecture.
             </span>
           </h1>
 
           <p className="text-zinc-400 text-base sm:text-lg mb-8 max-w-xl mx-auto">
-            Read thoughtful articles, share your voice, and explore fresh perspectives from creators everywhere.
+            Deep technical essays on Java, Spring Boot internals, distributed systems, and backend craft.
           </p>
 
           {/* Search Bar + Live Suggestions */}
@@ -232,7 +229,7 @@ const scrollCategories = (direction) => {
         </motion.div>
 
         {/* Animated Sliding Pill Category Filter */}
-       <div className="relative max-w-5xl mx-auto mb-10">
+        <div className="relative max-w-5xl mx-auto mb-10">
   <div className="flex items-center gap-2 bg-zinc-900/60 border border-zinc-800/80 rounded-full p-1.5 backdrop-blur-md">
     {/* Left Scroll Arrow */}
     <button
