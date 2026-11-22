@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axiosClient from '../api/axiosClient';
 import PostCard from '../components/PostCard';
-import { Search, ChevronLeft, ChevronRight, X, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, X, ArrowUpRight, Sparkles ,LayoutGrid} from 'lucide-react';
+
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -102,6 +103,20 @@ export default function Home() {
         setTotalPages(res.data.totalPages || 0);
       });
   };
+
+
+  const [showTopicsModal, setShowTopicsModal] = useState(false);
+const [topicSearch, setTopicSearch] = useState('');
+const categoryScrollRef = useRef(null);
+
+const scrollCategories = (direction) => {
+  if (categoryScrollRef.current) {
+    categoryScrollRef.current.scrollBy({
+      left: direction === 'left' ? -320 : 320,
+      behavior: 'smooth',
+    });
+  }
+};
 
   return (
     <div className="relative z-10">
@@ -217,35 +232,148 @@ export default function Home() {
         </motion.div>
 
         {/* Animated Sliding Pill Category Filter */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
-          {[{ id: '', name: 'All Articles' }, ...categories].map((cat) => {
-            const isActive =
-              cat.id === '' ? selectedCategory === '' && !keyword : selectedCategory === cat.id;
+       <div className="relative max-w-5xl mx-auto mb-10">
+  <div className="flex items-center gap-2 bg-zinc-900/60 border border-zinc-800/80 rounded-full p-1.5 backdrop-blur-md">
+    {/* Left Scroll Arrow */}
+    <button
+      type="button"
+      onClick={() => scrollCategories('left')}
+      className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/80 text-zinc-400 hover:text-amber-300 hover:bg-zinc-800 transition shrink-0 cursor-pointer"
+      aria-label="Scroll categories left"
+    >
+      <ChevronLeft className="w-4 h-4" />
+    </button>
 
-            return (
-              <button
-                key={cat.id || 'all'}
-                onClick={() => {
-                  setSelectedCategory(cat.id);
-                  setKeyword('');
-                  setPageNumber(0);
-                }}
-                className={`relative px-4 py-2 rounded-full text-xs font-bold transition cursor-pointer ${
-                  isActive ? 'text-zinc-950' : 'text-zinc-400 hover:text-amber-200'
-                }`}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="activeCategoryPill"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 shadow-lg shadow-amber-500/30 -z-10"
-                  />
-                )}
-                {cat.name}
-              </button>
-            );
-          })}
+    {/* Single-Line Horizontal Scrollable Pills */}
+    <div
+      ref={categoryScrollRef}
+      className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth flex-1 py-0.5"
+    >
+      {[{ id: '', name: 'All Articles' }, ...categories].map((cat) => {
+        const isActive =
+          cat.id === '' ? selectedCategory === '' && !keyword : selectedCategory === cat.id;
+
+        return (
+          <button
+            key={cat.id || 'all'}
+            onClick={() => {
+              setSelectedCategory(cat.id);
+              setKeyword('');
+              setPageNumber(0);
+            }}
+            className={`relative px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition shrink-0 cursor-pointer ${
+              isActive ? 'text-zinc-950' : 'text-zinc-400 hover:text-amber-200'
+            }`}
+          >
+            {isActive && (
+              <motion.span
+                layoutId="activeCategoryPill"
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 shadow-lg shadow-amber-500/30 -z-10"
+              />
+            )}
+            {cat.name}
+          </button>
+        );
+      })}
+    </div>
+
+    {/* Right Scroll Arrow */}
+    <button
+      type="button"
+      onClick={() => scrollCategories('right')}
+      className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/80 text-zinc-400 hover:text-amber-300 hover:bg-zinc-800 transition shrink-0 cursor-pointer"
+      aria-label="Scroll categories right"
+    >
+      <ChevronRight className="w-4 h-4" />
+    </button>
+
+    {/* All Topics Modal Trigger Button */}
+    <button
+      type="button"
+      onClick={() => setShowTopicsModal(true)}
+      className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-zinc-800 text-amber-300 hover:bg-zinc-700 border border-zinc-700/70 whitespace-nowrap transition shrink-0 cursor-pointer"
+    >
+      <LayoutGrid className="w-3.5 h-3.5" />
+      <span>Topics ({categories.length})</span>
+    </button>
+  </div>
+
+  {/* Searchable All Topics Modal */}
+  {showTopicsModal && (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+      onClick={() => setShowTopicsModal(false)}
+    >
+      <div
+        className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800">
+          <h3 className="text-base font-bold text-zinc-100">
+            Explore Topics ({categories.length})
+          </h3>
+          <button
+            type="button"
+            onClick={() => setShowTopicsModal(false)}
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
+
+        <div className="p-4 border-b border-zinc-800">
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-3.5 top-2.5 text-zinc-500" />
+            <input
+              type="text"
+              placeholder="Search topics (e.g. Horror, 2 AM, Backend, Love)..."
+              value={topicSearch}
+              onChange={(e) => setTopicSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+              autoFocus
+            />
+          </div>
+        </div>
+
+        <div className="p-4 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {[{ id: '', name: 'All Articles', description: 'Browse every post on ThoughtBook' }, ...categories]
+            .filter((cat) => cat.name.toLowerCase().includes(topicSearch.toLowerCase()))
+            .map((cat) => {
+              const isSelected =
+                cat.id === '' ? selectedCategory === '' && !keyword : selectedCategory === cat.id;
+
+              return (
+                <button
+                  key={cat.id || 'all-modal'}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(cat.id);
+                    setKeyword('');
+                    setPageNumber(0);
+                    setShowTopicsModal(false);
+                    setTopicSearch('');
+                  }}
+                  className={`text-left p-3 rounded-xl border transition cursor-pointer ${
+                    isSelected
+                      ? 'border-amber-500/70 bg-amber-500/10 text-amber-300'
+                      : 'border-zinc-800 bg-zinc-950/50 hover:border-zinc-700 text-zinc-200'
+                  }`}
+                >
+                  <div className="text-xs font-bold">{cat.name}</div>
+                  {cat.description && (
+                    <div className="text-[11px] text-zinc-500 line-clamp-1 mt-0.5">
+                      {cat.description}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+        </div>
+      </div>
+    </div>
+  )}
+</div>
 
         {/* Posts Grid */}
         {loading ? (
