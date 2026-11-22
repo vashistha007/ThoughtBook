@@ -131,18 +131,18 @@ const scrollCategories = (direction) => {
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-xs text-amber-300 font-semibold mb-5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>3D Interactive Engineering Publication</span>
+            <span>Where Curiosity Meets Storytelling</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white mb-4 leading-[1.08]">
-            Ideas Forged in{' '}
-            <span className="bg-gradient-to-r from-amber-300 via-orange-400 to-rose-500 bg-clip-text text-transparent">
-              Code & Architecture.
+            Your Digital{' '}
+            <span className="bg-linear-to-r from-amber-300 via-orange-400 to-rose-500 bg-clip-text text-transparent">
+              Thought Space
             </span>
           </h1>
 
           <p className="text-zinc-400 text-base sm:text-lg mb-8 max-w-xl mx-auto">
-            Deep technical essays on Java, Spring Boot internals, distributed systems, and backend craft.
+            Read thoughtful articles, share your voice, and explore fresh perspectives from creators everywhere.
           </p>
 
           {/* Search Bar + Live Suggestions */}
