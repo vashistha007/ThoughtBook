@@ -12,6 +12,7 @@ export default function PostDetail() {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -59,12 +60,15 @@ export default function PostDetail() {
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
+    setSubmitting(true);
     try {
       await axiosClient.post(`/posts/${id}/comments`, { text: newComment });
       setNewComment('');
-      loadPostAndComments();
+      await loadPostAndComments();
     } catch (err) {
       alert(err.response?.data?.message || 'Comment post nahi ho paya');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -93,7 +97,7 @@ export default function PostDetail() {
 
   return (
     <>
-      {/* Glowing Top Reading Progress Bar (Amber-Coral) */}
+      {/* Glowing Top Reading Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-zinc-900 z-50">
         <div
           className="h-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-600 transition-all duration-150"
@@ -102,9 +106,9 @@ export default function PostDetail() {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
+        transition={{ duration: 0.4 }}
         className="max-w-3xl mx-auto px-4 pt-10 pb-20"
       >
         <Link
@@ -114,8 +118,8 @@ export default function PostDetail() {
           <ArrowLeft className="w-4 h-4" /> Back to Explore
         </Link>
 
-        {/* Article Reader Card */}
-        <article className="bg-zinc-950/80 backdrop-blur-2xl border border-amber-500/20 rounded-3xl p-6 sm:p-10 mb-8 shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
+        {/* Article Reader Card (Mobile-GPU safe background) */}
+        <article className="bg-zinc-950/95 border border-amber-500/20 rounded-3xl p-6 sm:p-10 mb-8 shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
           <div className="flex items-center justify-between gap-4 mb-5">
             <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500/15 to-rose-500/15 border border-amber-400/30 text-amber-300 text-xs font-bold px-3.5 py-1 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -144,10 +148,10 @@ export default function PostDetail() {
             {post.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-400 pb-6 mb-8 border-b border-white/10">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-zinc-400 pb-6 mb-8 border-b border-white/10">
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-rose-600 flex items-center justify-center text-xs font-black text-zinc-950 uppercase">
-                {post.authorUsername?.[0]}
+                {post.authorUsername?.[0] || 'U'}
               </div>
               <span className="font-semibold text-zinc-200">@{post.authorUsername}</span>
             </div>
@@ -164,40 +168,40 @@ export default function PostDetail() {
             </span>
           </div>
 
-          <div className="text-zinc-200 leading-8 whitespace-pre-line text-base sm:text-[17px]">
+          <div className="text-zinc-200 leading-8 whitespace-pre-line text-base sm:text-[17px] break-words">
             {post.content}
           </div>
         </article>
 
         {/* Comments Panel */}
-        <section className="bg-zinc-950/80 backdrop-blur-2xl border border-amber-500/20 rounded-3xl p-6 sm:p-8 shadow-xl">
+        <section className="bg-zinc-950/95 border border-amber-500/20 rounded-3xl p-6 sm:p-8 shadow-xl">
           <h3 className="text-lg font-extrabold text-white flex items-center gap-2 mb-6">
             <MessageSquare className="w-5 h-5 text-amber-400" />
             Discussion ({comments.length})
           </h3>
 
           {user ? (
-           <form
-  onSubmit={handleCommentSubmit} // <-- Apne existing submit handler ka naam rakhna
-  className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full"
->
-  <input
-    type="text"
-    required
-    value={commentText} // <-- Apne existing state ka naam rakhna
-    onChange={(e) => setCommentText(e.target.value)} // <-- Apna existing setter rakhna
-    placeholder="Share your thoughts on this article..."
-    className="w-full min-w-0 flex-1 bg-zinc-900/90 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 transition"
-  />
-  <button
-    type="submit"
-    disabled={submitting} // <-- Agar loading state hai toh rakhna, warna hata dena
-    className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-orange-500 to-rose-600 hover:brightness-110 text-zinc-950 font-extrabold px-5 py-3 rounded-xl text-sm shadow-lg shadow-amber-500/20 transition cursor-pointer"
-  >
-    <Send className="w-4 h-4" />
-    <span>Post</span>
-  </button>
-</form>
+            <form
+              onSubmit={handleAddComment}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full mb-6"
+            >
+              <input
+                type="text"
+                required
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Share your thoughts on this article..."
+                className="w-full min-w-0 flex-1 bg-zinc-900/90 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 transition"
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-orange-500 to-rose-600 hover:brightness-110 disabled:opacity-50 text-zinc-950 font-extrabold px-5 py-3 rounded-xl text-sm shadow-lg shadow-amber-500/20 transition cursor-pointer"
+              >
+                <Send className="w-4 h-4" />
+                <span>{submitting ? 'Posting...' : 'Post'}</span>
+              </button>
+            </form>
           ) : (
             <p className="text-xs text-zinc-400 mb-6 bg-white/5 p-3.5 rounded-xl border border-white/10">
               <Link to="/login" className="text-amber-400 font-semibold hover:underline">
@@ -219,14 +223,16 @@ export default function PostDetail() {
                   transition={{ delay: idx * 0.05 }}
                   className="bg-zinc-900/80 border border-white/10 rounded-2xl p-4 flex justify-between items-start gap-4"
                 >
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-amber-400 mb-1">@{commentAuthor}</div>
-                    <p className="text-sm text-zinc-300 leading-relaxed">{c.text || c.content}</p>
+                    <p className="text-sm text-zinc-300 leading-relaxed break-words">
+                      {c.text || c.content}
+                    </p>
                   </div>
                   {canDeleteComment && (
                     <button
                       onClick={() => handleDeleteComment(c.id)}
-                      className="p-1.5 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
+                      className="p-1.5 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer shrink-0"
                       title="Delete comment"
                     >
                       <Trash2 className="w-4 h-4" />
