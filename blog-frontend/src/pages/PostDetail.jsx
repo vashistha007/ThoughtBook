@@ -177,23 +177,27 @@ export default function PostDetail() {
           </h3>
 
           {user ? (
-            <form onSubmit={handleAddComment} className="flex gap-2.5 mb-8">
-              <input
-                type="text"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Share your thoughts on this article..."
-                className="flex-1 bg-zinc-900/90 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 transition"
-              />
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                type="submit"
-                className="bg-gradient-to-r from-amber-400 via-orange-500 to-rose-600 hover:brightness-110 text-zinc-950 px-5 py-3 rounded-xl text-sm font-extrabold flex items-center gap-1.5 shadow-lg shadow-amber-500/25 transition cursor-pointer"
-              >
-                <Send className="w-4 h-4" /> Post
-              </motion.button>
-            </form>
+           <form
+  onSubmit={handleCommentSubmit} // <-- Apne existing submit handler ka naam rakhna
+  className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full"
+>
+  <input
+    type="text"
+    required
+    value={commentText} // <-- Apne existing state ka naam rakhna
+    onChange={(e) => setCommentText(e.target.value)} // <-- Apna existing setter rakhna
+    placeholder="Share your thoughts on this article..."
+    className="w-full min-w-0 flex-1 bg-zinc-900/90 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 transition"
+  />
+  <button
+    type="submit"
+    disabled={submitting} // <-- Agar loading state hai toh rakhna, warna hata dena
+    className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-orange-500 to-rose-600 hover:brightness-110 text-zinc-950 font-extrabold px-5 py-3 rounded-xl text-sm shadow-lg shadow-amber-500/20 transition cursor-pointer"
+  >
+    <Send className="w-4 h-4" />
+    <span>Post</span>
+  </button>
+</form>
           ) : (
             <p className="text-xs text-zinc-400 mb-6 bg-white/5 p-3.5 rounded-xl border border-white/10">
               <Link to="/login" className="text-amber-400 font-semibold hover:underline">
