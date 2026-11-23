@@ -83,6 +83,7 @@ export default function ChemicalFlaskReaction({ postId, dropdownDirection = 'up'
 
   const handleReact = async (type) => {
     if (submitting) return;
+    setPickerOpen(false); // Click karte hi dropdown turant close karo
     setSubmitting(true);
     triggerShake();
 
