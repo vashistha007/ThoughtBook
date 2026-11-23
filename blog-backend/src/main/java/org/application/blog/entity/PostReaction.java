@@ -34,7 +34,7 @@ public class PostReaction {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 30, columnDefinition = "VARCHAR(30)")
     private ReactionType type;
 
     @CreationTimestamp

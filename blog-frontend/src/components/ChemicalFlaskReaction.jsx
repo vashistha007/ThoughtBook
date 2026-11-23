@@ -31,7 +31,18 @@ function mixPotionColor(counts, totalCount) {
 
 export default function ChemicalFlaskReaction({ postId, dropdownDirection = 'up' }) {
   const [summary, setSummary] = useState({
-    counts: { HAPPY: 0, SAD: 0, AMAZING: 0, MIND_BLOWN: 0, INSPIRED: 0, FIRE: 0 },
+    counts: {
+      HAPPY: 0,
+      SAD: 0,
+      LAUGH: 0,
+      AMAZING: 0,
+      MIND_BLOWN: 0,
+      INSPIRED: 0,
+      FIRE: 0,
+      LOVE: 0,
+      RELATABLE: 0,
+      THOUGHTFUL: 0,
+    },
     totalCount: 0,
     userReaction: null,
     users: [],
@@ -247,7 +258,7 @@ export default function ChemicalFlaskReaction({ postId, dropdownDirection = 'up'
           </button>
         </div>
 
-        {/* Vertical Reaction Picker Dropdown */}
+        {/* Scrollable Vertical Reaction Picker Dropdown */}
         <AnimatePresence>
           {pickerOpen && (
             <motion.div
@@ -261,9 +272,9 @@ export default function ChemicalFlaskReaction({ postId, dropdownDirection = 'up'
               }}
               className={`absolute right-0 sm:left-0 sm:right-auto ${
                 dropdownDirection === 'up' ? 'bottom-full mb-2' : 'top-full mt-2'
-              } w-48 rounded-2xl bg-zinc-950/95 backdrop-blur-xl border border-amber-500/35 p-1.5 shadow-[0_18px_45px_rgba(0,0,0,0.92)] z-50 flex flex-col gap-1`}
+              } w-48 max-h-64 overflow-y-auto rounded-2xl bg-zinc-950/95 backdrop-blur-xl border border-amber-500/35 p-1.5 shadow-[0_18px_45px_rgba(0,0,0,0.92)] z-50 flex flex-col gap-1`}
             >
-              <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-widest text-amber-300/80 border-b border-white/10 flex items-center justify-between">
+              <div className="sticky top-0 bg-zinc-950/95 backdrop-blur-md z-10 px-2.5 py-1 text-[10px] font-mono uppercase tracking-widest text-amber-300/80 border-b border-white/10 flex items-center justify-between">
                 <span>React</span>
                 <button
                   type="button"
@@ -289,7 +300,7 @@ export default function ChemicalFlaskReaction({ postId, dropdownDirection = 'up'
                     whileHover={{ x: 3 }}
                     whileTap={{ scale: 0.96 }}
                     onClick={() => handleReact(item.type)}
-                    className={`flex items-center justify-between w-full px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer ${
+                    className={`flex items-center justify-between w-full px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer shrink-0 ${
                       isSelected
                         ? 'bg-amber-500/20 border border-amber-400/50 text-white font-bold'
                         : 'hover:bg-white/5 text-zinc-300 border border-transparent'
