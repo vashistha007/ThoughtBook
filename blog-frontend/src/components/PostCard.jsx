@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, ArrowUpRight, Clock } from 'lucide-react';
+import ChemicalFlaskReaction from './ChemicalFlaskReaction';
 
 export default function PostCard({ post, index = 0 }) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -54,11 +55,11 @@ export default function PostCard({ post, index = 0 }) {
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
-      className="relative group rounded-2xl bg-zinc-900/65 backdrop-blur-xl border border-white/10 p-6 flex flex-col justify-between overflow-hidden transition-colors duration-300 hover:border-amber-400/50 shadow-[0_12px_35px_rgba(0,0,0,0.6)]"
+      className="relative group rounded-2xl bg-zinc-900/65 backdrop-blur-xl border border-white/10 p-6 flex flex-col justify-between transition-colors duration-300 hover:border-amber-400/50 shadow-[0_12px_35px_rgba(0,0,0,0.6)]"
     >
       {/* Dynamic Golden-Coral Cursor Spotlight */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-2xl transition-opacity duration-300"
+        className="pointer-events-none absolute -inset-px rounded-2xl overflow-hidden transition-opacity duration-300"
         style={{
           opacity: isHovered ? 1 : 0,
           background: `radial-gradient(420px circle at ${mousePos.x}px ${mousePos.y}px, rgba(245, 158, 11, 0.18), rgba(244, 63, 94, 0.08) 45%, transparent 80%)`,
@@ -93,26 +94,30 @@ export default function PostCard({ post, index = 0 }) {
       </div>
 
       {/* Footer */}
-      <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-rose-600 flex items-center justify-center text-[11px] font-black text-zinc-950 uppercase">
+      <div className="relative z-20 pt-4 border-t border-white/10 flex items-center justify-between gap-2 text-xs">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-rose-600 flex items-center justify-center text-[11px] font-black text-zinc-950 uppercase shrink-0">
             {post.authorUsername?.[0]}
           </div>
-          <div>
-            <p className="font-semibold text-zinc-200">@{post.authorUsername}</p>
+          <div className="min-w-0">
+            <p className="font-semibold text-zinc-200 truncate">@{post.authorUsername}</p>
             <p className="text-[11px] text-zinc-500 flex items-center gap-1">
-              <Calendar className="w-3 h-3" /> {formattedDate}
+              <Calendar className="w-3 h-3 shrink-0" /> {formattedDate}
             </p>
           </div>
         </div>
 
-        <Link
-          to={`/posts/${post.id}`}
-          className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-white/5 group-hover:bg-gradient-to-r group-hover:from-amber-500 group-hover:to-rose-600 text-zinc-300 group-hover:text-zinc-950 font-bold transition-all"
-        >
-          <span>Read</span>
-          <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-        </Link>
+        <div className="flex items-center gap-2 shrink-0">
+          <ChemicalFlaskReaction postId={post.id} dropdownDirection="up" />
+
+          <Link
+            to={`/posts/${post.id}`}
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/5 group-hover:bg-gradient-to-r group-hover:from-amber-500 group-hover:to-rose-600 text-zinc-300 group-hover:text-zinc-950 font-bold transition-all"
+          >
+            <span>Read</span>
+            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </Link>
+        </div>
       </div>
     </motion.article>
   );

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import axiosClient from '../api/axiosClient';
 import { useAuth } from '../context/AuthContext';
 import { Edit, Trash2, MessageSquare, Send, ArrowLeft, Calendar, Clock } from 'lucide-react';
+import ChemicalFlaskReaction from '../components/ChemicalFlaskReaction';
 
 export default function PostDetail() {
   const { id } = useParams();
@@ -170,6 +171,16 @@ export default function PostDetail() {
 
           <div className="text-zinc-200 leading-8 whitespace-pre-line text-base sm:text-[17px] break-words">
             {post.content}
+          </div>
+
+          {/* Chemical Flask Reaction Bar */}
+          <div className="mt-10 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <ChemicalFlaskReaction postId={post.id} dropdownDirection="up" />
+              <span className="text-xs text-zinc-400">
+                Tap or hover the flask to blend your reaction
+              </span>
+            </div>
           </div>
         </article>
 

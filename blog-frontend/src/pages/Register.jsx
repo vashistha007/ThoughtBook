@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axiosClient from '../api/axiosClient';
 import { Sparkles, User, Mail, Lock, ArrowRight } from 'lucide-react';
+import OpenBookBackground from '../components/OpenBookBackground';
 
 export default function Register() {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
@@ -25,15 +26,15 @@ export default function Register() {
   };
 
   return (
-    <div className="relative min-h-[85vh] flex items-center justify-center px-4 py-12">
-      {/* Warm Gold & Coral Ambient Aura */}
-      <div className="pointer-events-none absolute w-[500px] h-[340px] bg-gradient-to-tr from-rose-600/20 via-orange-500/15 to-amber-400/20 blur-[110px] rounded-full -z-10" />
+    <div className="relative min-h-[85vh] flex items-center justify-center px-4 py-12 overflow-x-hidden">
+      {/* 3D Open Glowing Book Background */}
+      <OpenBookBackground />
 
       <motion.div
         initial={{ opacity: 0, y: 28, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-md bg-zinc-950/80 backdrop-blur-2xl border border-amber-500/25 rounded-3xl p-8 sm:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.85)]"
+        className="w-full max-w-md bg-zinc-950/65 backdrop-blur-md border border-amber-500/30 rounded-3xl p-8 sm:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.85)]"
       >
         <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-rose-600 shadow-lg shadow-rose-500/25 mb-6 mx-auto">
           <Sparkles className="w-6 h-6 text-zinc-950" />
@@ -43,7 +44,7 @@ export default function Register() {
           Join ThoughtBook
         </h2>
         <p className="text-zinc-400 text-sm text-center mb-7">
-          Create your author profile and share technical deep dives
+          Create your space to read, write, and share ideas
         </p>
 
         {error && (
@@ -121,7 +122,7 @@ export default function Register() {
           </motion.button>
         </form>
 
-        <p className="text-center text-xs text-zinc-400 mt-7">
+        <p className="text-center text-xs text-zinc-400 mt-6 pt-5 border-t border-white/10">
           Already have an account?{' '}
           <Link to="/login" className="text-amber-400 font-semibold hover:text-amber-300 hover:underline">
             Sign In

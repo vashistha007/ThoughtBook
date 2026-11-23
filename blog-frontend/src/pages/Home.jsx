@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axiosClient from '../api/axiosClient';
 import PostCard from '../components/PostCard';
-import { Search, ChevronLeft, ChevronRight, X, ArrowUpRight, Sparkles,LayoutGrid } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, X, ArrowUpRight, Sparkles, LayoutGrid } from 'lucide-react';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -45,7 +45,7 @@ export default function Home() {
       setLoadingSuggestions(true);
       try {
         const res = await axiosClient.get(
-          `/posts/search?keyword=${encodeURIComponent(trimmed)}&pageNumber=0&pageSize=5`
+          `/posts/search?keyword=${encodeURIComponent(trimmed)}&page=0&size=5`
         );
         setSuggestions(res.data.content || []);
         setShowSuggestions(true);
@@ -62,11 +62,11 @@ export default function Home() {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      let url = `/posts?pageNumber=${pageNumber}&pageSize=6&sortBy=createdAt&direction=desc`;
+      let url = `/posts?page=${pageNumber}&size=6&sortBy=createdAt&sortDir=desc`;
       if (keyword.trim()) {
-        url = `/posts/search?keyword=${encodeURIComponent(keyword.trim())}&pageNumber=${pageNumber}&pageSize=6`;
+        url = `/posts/search?keyword=${encodeURIComponent(keyword.trim())}&page=${pageNumber}&size=6`;
       } else if (selectedCategory) {
-        url = `/posts/category/${selectedCategory}?pageNumber=${pageNumber}&pageSize=6`;
+        url = `/posts/category/${selectedCategory}?page=${pageNumber}&size=6`;
       }
       const res = await axiosClient.get(url);
       setPosts(res.data.content || []);
@@ -96,7 +96,7 @@ export default function Home() {
     setShowSuggestions(false);
     setPageNumber(0);
     axiosClient
-      .get('/posts?pageNumber=0&pageSize=6&sortBy=createdAt&direction=desc')
+      .get('/posts?page=0&size=6&sortBy=createdAt&sortDir=desc')
       .then((res) => {
         setPosts(res.data.content || []);
         setTotalPages(res.data.totalPages || 0);
@@ -104,17 +104,17 @@ export default function Home() {
   };
 
   const [showTopicsModal, setShowTopicsModal] = useState(false);
-const [topicSearch, setTopicSearch] = useState('');
-const categoryScrollRef = useRef(null);
+  const [topicSearch, setTopicSearch] = useState('');
+  const categoryScrollRef = useRef(null);
 
-const scrollCategories = (direction) => {
-  if (categoryScrollRef.current) {
-    categoryScrollRef.current.scrollBy({
-      left: direction === 'left' ? -320 : 320,
-      behavior: 'smooth',
-    });
-  }
-};
+  const scrollCategories = (direction) => {
+    if (categoryScrollRef.current) {
+      categoryScrollRef.current.scrollBy({
+        left: direction === 'left' ? -320 : 320,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   return (
     <div className="relative z-10">
@@ -157,7 +157,7 @@ const scrollCategories = (direction) => {
                 value={keyword}
                 onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
                 onChange={(e) => setKeyword(e.target.value)}
-                placeholder="Search articles, architectures, Spring Boot..."
+                placeholder="Search by title, topic, or @username..."
                 className="w-full bg-transparent px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none"
               />
               {keyword && (
@@ -212,7 +212,7 @@ const scrollCategories = (direction) => {
                                 <div className="flex items-center gap-2 text-xs text-zinc-400 mt-0.5">
                                   <span className="text-emerald-400">{item.categoryName || 'General'}</span>
                                   <span>•</span>
-                                  <span>@{item.authorUsername}</span>
+                                  <span className="text-amber-300/80">@{item.authorUsername}</span>
                                 </div>
                               </div>
                               <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-amber-300 transition shrink-0" />
@@ -230,147 +230,147 @@ const scrollCategories = (direction) => {
 
         {/* Animated Sliding Pill Category Filter */}
         <div className="relative max-w-5xl mx-auto mb-10">
-  <div className="flex items-center gap-2 bg-zinc-900/60 border border-zinc-800/80 rounded-full p-1.5 backdrop-blur-md">
-    {/* Left Scroll Arrow */}
-    <button
-      type="button"
-      onClick={() => scrollCategories('left')}
-      className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/80 text-zinc-400 hover:text-amber-300 hover:bg-zinc-800 transition shrink-0 cursor-pointer"
-      aria-label="Scroll categories left"
-    >
-      <ChevronLeft className="w-4 h-4" />
-    </button>
+          <div className="flex items-center gap-2 bg-zinc-900/60 border border-zinc-800/80 rounded-full p-1.5 backdrop-blur-md">
+            {/* Left Scroll Arrow */}
+            <button
+              type="button"
+              onClick={() => scrollCategories('left')}
+              className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/80 text-zinc-400 hover:text-amber-300 hover:bg-zinc-800 transition shrink-0 cursor-pointer"
+              aria-label="Scroll categories left"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
 
-    {/* Single-Line Horizontal Scrollable Pills */}
-    <div
-      ref={categoryScrollRef}
-      className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth flex-1 py-0.5"
-    >
-      {[{ id: '', name: 'All Articles' }, ...categories].map((cat) => {
-        const isActive =
-          cat.id === '' ? selectedCategory === '' && !keyword : selectedCategory === cat.id;
+            {/* Single-Line Horizontal Scrollable Pills */}
+            <div
+              ref={categoryScrollRef}
+              className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth flex-1 py-0.5"
+            >
+              {[{ id: '', name: 'All Articles' }, ...categories].map((cat) => {
+                const isActive =
+                  cat.id === '' ? selectedCategory === '' && !keyword : selectedCategory === cat.id;
 
-        return (
-          <button
-            key={cat.id || 'all'}
-            onClick={() => {
-              setSelectedCategory(cat.id);
-              setKeyword('');
-              setPageNumber(0);
-            }}
-            className={`relative px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition shrink-0 cursor-pointer ${
-              isActive ? 'text-zinc-950' : 'text-zinc-400 hover:text-amber-200'
-            }`}
-          >
-            {isActive && (
-              <motion.span
-                layoutId="activeCategoryPill"
-                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 shadow-lg shadow-amber-500/30 -z-10"
-              />
-            )}
-            {cat.name}
-          </button>
-        );
-      })}
-    </div>
+                return (
+                  <button
+                    key={cat.id || 'all'}
+                    onClick={() => {
+                      setSelectedCategory(cat.id);
+                      setKeyword('');
+                      setPageNumber(0);
+                    }}
+                    className={`relative px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition shrink-0 cursor-pointer ${
+                      isActive ? 'text-zinc-950' : 'text-zinc-400 hover:text-amber-200'
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="activeCategoryPill"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                        className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 shadow-lg shadow-amber-500/30 -z-10"
+                      />
+                    )}
+                    {cat.name}
+                  </button>
+                );
+              })}
+            </div>
 
-    {/* Right Scroll Arrow */}
-    <button
-      type="button"
-      onClick={() => scrollCategories('right')}
-      className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/80 text-zinc-400 hover:text-amber-300 hover:bg-zinc-800 transition shrink-0 cursor-pointer"
-      aria-label="Scroll categories right"
-    >
-      <ChevronRight className="w-4 h-4" />
-    </button>
+            {/* Right Scroll Arrow */}
+            <button
+              type="button"
+              onClick={() => scrollCategories('right')}
+              className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/80 text-zinc-400 hover:text-amber-300 hover:bg-zinc-800 transition shrink-0 cursor-pointer"
+              aria-label="Scroll categories right"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
 
-    {/* All Topics Modal Trigger Button */}
-    <button
-      type="button"
-      onClick={() => setShowTopicsModal(true)}
-      className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-zinc-800 text-amber-300 hover:bg-zinc-700 border border-zinc-700/70 whitespace-nowrap transition shrink-0 cursor-pointer"
-    >
-      <LayoutGrid className="w-3.5 h-3.5" />
-      <span>Topics ({categories.length})</span>
-    </button>
-  </div>
-
-  {/* Searchable All Topics Modal */}
-  {showTopicsModal && (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
-      onClick={() => setShowTopicsModal(false)}
-    >
-      <div
-        className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800">
-          <h3 className="text-base font-bold text-zinc-100">
-            Explore Topics ({categories.length})
-          </h3>
-          <button
-            type="button"
-            onClick={() => setShowTopicsModal(false)}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div className="p-4 border-b border-zinc-800">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-2.5 text-zinc-500" />
-            <input
-              type="text"
-              placeholder="Search topics (e.g. Horror, 2 AM, Backend, Love)..."
-              value={topicSearch}
-              onChange={(e) => setTopicSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm placeholder-zinc-500 focus:outline-none focus:border-amber-500"
-              autoFocus
-            />
+            {/* All Topics Modal Trigger Button */}
+            <button
+              type="button"
+              onClick={() => setShowTopicsModal(true)}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-zinc-800 text-amber-300 hover:bg-zinc-700 border border-zinc-700/70 whitespace-nowrap transition shrink-0 cursor-pointer"
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Topics ({categories.length})</span>
+            </button>
           </div>
-        </div>
 
-        <div className="p-4 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {[{ id: '', name: 'All Articles', description: 'Browse every post on ThoughtBook' }, ...categories]
-            .filter((cat) => cat.name.toLowerCase().includes(topicSearch.toLowerCase()))
-            .map((cat) => {
-              const isSelected =
-                cat.id === '' ? selectedCategory === '' && !keyword : selectedCategory === cat.id;
+          {/* Searchable All Topics Modal */}
+          {showTopicsModal && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+              onClick={() => setShowTopicsModal(false)}
+            >
+              <div
+                className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800">
+                  <h3 className="text-base font-bold text-zinc-100">
+                    Explore Topics ({categories.length})
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowTopicsModal(false)}
+                    className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
 
-              return (
-                <button
-                  key={cat.id || 'all-modal'}
-                  type="button"
-                  onClick={() => {
-                    setSelectedCategory(cat.id);
-                    setKeyword('');
-                    setPageNumber(0);
-                    setShowTopicsModal(false);
-                    setTopicSearch('');
-                  }}
-                  className={`text-left p-3 rounded-xl border transition cursor-pointer ${
-                    isSelected
-                      ? 'border-amber-500/70 bg-amber-500/10 text-amber-300'
-                      : 'border-zinc-800 bg-zinc-950/50 hover:border-zinc-700 text-zinc-200'
-                  }`}
-                >
-                  <div className="text-xs font-bold">{cat.name}</div>
-                  {cat.description && (
-                    <div className="text-[11px] text-zinc-500 line-clamp-1 mt-0.5">
-                      {cat.description}
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+                <div className="p-4 border-b border-zinc-800">
+                  <div className="relative">
+                    <Search className="w-4 h-4 absolute left-3.5 top-2.5 text-zinc-500" />
+                    <input
+                      type="text"
+                      placeholder="Search topics (e.g. Horror, 2 AM, Backend, Love)..."
+                      value={topicSearch}
+                      onChange={(e) => setTopicSearch(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+                      autoFocus
+                    />
+                  </div>
+                </div>
+
+                <div className="p-4 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {[{ id: '', name: 'All Articles', description: 'Browse every post on ThoughtBook' }, ...categories]
+                    .filter((cat) => cat.name.toLowerCase().includes(topicSearch.toLowerCase()))
+                    .map((cat) => {
+                      const isSelected =
+                        cat.id === '' ? selectedCategory === '' && !keyword : selectedCategory === cat.id;
+
+                      return (
+                        <button
+                          key={cat.id || 'all-modal'}
+                          type="button"
+                          onClick={() => {
+                            setSelectedCategory(cat.id);
+                            setKeyword('');
+                            setPageNumber(0);
+                            setShowTopicsModal(false);
+                            setTopicSearch('');
+                          }}
+                          className={`text-left p-3 rounded-xl border transition cursor-pointer ${
+                            isSelected
+                              ? 'border-amber-500/70 bg-amber-500/10 text-amber-300'
+                              : 'border-zinc-800 bg-zinc-950/50 hover:border-zinc-700 text-zinc-200'
+                          }`}
+                        >
+                          <div className="text-xs font-bold">{cat.name}</div>
+                          {cat.description && (
+                            <div className="text-[11px] text-zinc-500 line-clamp-1 mt-0.5">
+                              {cat.description}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-    </div>
-  )}
-</div>
 
         {/* Posts Grid */}
         {loading ? (
@@ -407,7 +407,10 @@ const scrollCategories = (direction) => {
           <div className="flex items-center justify-center gap-4 mt-12">
             <button
               disabled={pageNumber === 0}
-              onClick={() => setPageNumber((p) => p - 1)}
+              onClick={() => {
+                setPageNumber((p) => p - 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-900/80 border border-white/10 text-sm text-zinc-300 hover:border-amber-400/50 disabled:opacity-40 transition cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" /> Prev
@@ -417,7 +420,10 @@ const scrollCategories = (direction) => {
             </span>
             <button
               disabled={pageNumber + 1 >= totalPages}
-              onClick={() => setPageNumber((p) => p + 1)}
+              onClick={() => {
+                setPageNumber((p) => p + 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-900/80 border border-white/10 text-sm text-zinc-300 hover:border-amber-400/50 disabled:opacity-40 transition cursor-pointer"
             >
               Next <ChevronRight className="w-4 h-4" />

@@ -60,7 +60,8 @@ public class SecurityConfig {
                                               ).permitAll()
 
                         // Saare GET requests (Posts aur Comments padhna) public rahenge
-                        .requestMatchers(HttpMethod.GET, "/api/posts/**", "/api/health","/api/categories/**").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/api/posts/**", "/api/health","/api/categories/**").permitAll()
+                          .requestMatchers(HttpMethod.GET, "/api/posts/**", "/api/health").permitAll()
 
                         // Baaki koi bhi request (POST, PUT, DELETE) bina valid JWT token ke allowed nahi hogi
                         .anyRequest().authenticated()

@@ -32,7 +32,7 @@ public class PostController {
     }
 
 
-//    1. Get all Users
+//    1. Get all posts
     @GetMapping
     public ResponseEntity<PostPageResponse> getAllPosts(
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,

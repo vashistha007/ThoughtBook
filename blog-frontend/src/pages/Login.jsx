@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { Flame, Lock, User, ArrowRight } from 'lucide-react';
+import OpenBookBackground from '../components/OpenBookBackground';
 
 export default function Login() {
   const [form, setForm] = useState({ usernameOrEmail: '', password: '' });
@@ -27,14 +28,14 @@ export default function Login() {
 
   return (
     <div className="relative min-h-[85vh] flex items-center justify-center px-4 py-12 overflow-x-hidden">
-      {/* Warm Gold & Coral Ambient Aura */}
-      <div className="pointer-events-none absolute w-full max-w-[480px] h-[320px] bg-gradient-to-tr from-amber-500/20 via-orange-600/15 to-rose-600/20 blur-[110px] rounded-full -z-10" />
+      {/* 3D Open Glowing Book Background */}
+      <OpenBookBackground />
 
       <motion.div
-        initial={{ opacity: 0, y: 28, scale: 0.96 }}
+        initial={{ opacity: 0, y: 24, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-md bg-zinc-950/80 backdrop-blur-2xl border border-amber-500/25 rounded-3xl p-8 sm:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.85)]"
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-md bg-zinc-950/75 border border-amber-500/30 rounded-3xl p-8 sm:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.85)]"
       >
         <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-rose-600 shadow-lg shadow-amber-500/30 mb-6 mx-auto">
           <Flame className="w-6 h-6 text-zinc-950 fill-zinc-950" />
@@ -44,7 +45,7 @@ export default function Login() {
           Welcome Back
         </h2>
         <p className="text-zinc-400 text-sm text-center mb-7">
-          Sign in to publish and manage your engineering notes
+          Step back into your personal thought space
         </p>
 
         {error && (
@@ -103,7 +104,6 @@ export default function Login() {
             {!submitting && <ArrowRight className="w-4 h-4" />}
           </motion.button>
 
-          {/* Forgot Password Button Below Sign In */}
           <div className="text-center pt-1">
             <Link
               to="/forgot-password"
@@ -116,7 +116,10 @@ export default function Login() {
 
         <p className="text-center text-xs text-zinc-400 mt-6 pt-5 border-t border-white/10">
           New to ThoughtBook?{' '}
-          <Link to="/register" className="text-amber-400 font-semibold hover:text-amber-300 hover:underline">
+          <Link
+            to="/register"
+            className="text-amber-400 font-semibold hover:text-amber-300 hover:underline"
+          >
             Create an account
           </Link>
         </p>

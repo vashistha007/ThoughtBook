@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ThreeBackground from './components/ThreeBackground';
 import Navbar from './components/Navbar';
@@ -23,12 +23,28 @@ export default function App() {
           <div className="relative z-10">
             <Navbar />
             <Routes>
-              <Route path="/" element={<Home />} />
+              {/* Public Auth Routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/posts/:id" element={<PostDetail />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
 
+              {/* Protected Routes (Login Required) */}
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/posts/:id"
+                element={
+                  <ProtectedRoute>
+                    <PostDetail />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/write"
                 element={
@@ -61,6 +77,9 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+
+              {/* Fallback Route */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>
         </div>

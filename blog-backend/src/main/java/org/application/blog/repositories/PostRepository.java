@@ -8,21 +8,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByTitleContainingIgnoreCase(String keyword, Pageable pageable);
-    // 2. Specific author ke posts dhoondho
+
+    // Specific author ke posts dhoondho
     Page<Post> findByAuthorUsername(String username, Pageable pageable);
 
     Page<Post> findByCategoryId(Long categoryId, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    @Query("SELECT p FROM Post p WHERE " +
+            "LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(p.author.username) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Post> searchPosts(@Param("keyword") String keyword, Pageable pageable);
 
     long countByAuthorId(Long authorId);
-
 }

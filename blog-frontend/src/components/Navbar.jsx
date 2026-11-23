@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PenSquare, Shield, LogOut, Flame, Menu, X, Compass, User } from 'lucide-react';
+import { PenSquare, Shield, LogOut, Flame, Menu, X, Compass } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout, isAdmin } = useAuth();
@@ -27,7 +27,11 @@ export default function Navbar() {
     >
       <nav className="max-w-6xl mx-auto h-16 px-4 sm:px-5 rounded-2xl bg-zinc-950/80 backdrop-blur-2xl border border-amber-500/20 shadow-[0_10px_40px_rgba(0,0,0,0.75)] flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 group shrink-0">
+        <Link
+          to={user ? '/' : '/login'}
+          onClick={closeMenu}
+          className="flex items-center gap-2.5 group shrink-0"
+        >
           <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-rose-600 shadow-lg shadow-amber-500/30 group-hover:rotate-6 transition-transform">
             <Flame className="w-5 h-5 text-zinc-950 fill-zinc-950" />
           </div>
@@ -38,19 +42,19 @@ export default function Navbar() {
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-4 text-sm font-medium">
-          <Link
-            to="/"
-            className={`px-3.5 py-1.5 rounded-xl transition ${
-              location.pathname === '/'
-                ? 'text-amber-300 bg-amber-500/10 border border-amber-500/25'
-                : 'text-zinc-400 hover:text-amber-200'
-            }`}
-          >
-            Explore
-          </Link>
-
           {user ? (
             <>
+              <Link
+                to="/"
+                className={`px-3.5 py-1.5 rounded-xl transition ${
+                  location.pathname === '/'
+                    ? 'text-amber-300 bg-amber-500/10 border border-amber-500/25'
+                    : 'text-zinc-400 hover:text-amber-200'
+                }`}
+              >
+                Explore
+              </Link>
+
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                 <Link
                   to="/write"
@@ -130,7 +134,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Dropdown Panel (Matches Floating Glassmorphic Theme) */}
+      {/* Mobile Dropdown Panel */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -141,21 +145,21 @@ export default function Navbar() {
             className="md:hidden max-w-6xl mx-auto mt-2 p-3.5 rounded-2xl bg-zinc-950/95 backdrop-blur-2xl border border-amber-500/25 shadow-2xl"
           >
             <div className="flex flex-col gap-2 text-sm font-medium">
-              <Link
-                to="/"
-                onClick={closeMenu}
-                className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl transition ${
-                  location.pathname === '/'
-                    ? 'text-amber-300 bg-amber-500/10 border border-amber-500/25'
-                    : 'text-zinc-300 hover:bg-white/5'
-                }`}
-              >
-                <Compass className="w-4 h-4 text-amber-400" />
-                <span>Explore</span>
-              </Link>
-
               {user ? (
                 <>
+                  <Link
+                    to="/"
+                    onClick={closeMenu}
+                    className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl transition ${
+                      location.pathname === '/'
+                        ? 'text-amber-300 bg-amber-500/10 border border-amber-500/25'
+                        : 'text-zinc-300 hover:bg-white/5'
+                    }`}
+                  >
+                    <Compass className="w-4 h-4 text-amber-400" />
+                    <span>Explore</span>
+                  </Link>
+
                   {isAdmin && (
                     <Link
                       to="/admin/categories"
