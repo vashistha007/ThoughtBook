@@ -7,6 +7,7 @@ import axiosClient from '../api/axiosClient';
 const REACTIONS = [
   { type: 'HAPPY', label: 'Happy', emoji: '😊', rgb: [245, 158, 11], hex: '#f59e0b' },
   { type: 'SAD', label: 'Sad', emoji: '😢', rgb: [59, 130, 246], hex: '#3b82f6' },
+  { type: 'LAUGH', label: 'Laugh', emoji: '😂', rgb: [234, 179, 8], hex: '#eab308' },
   { type: 'AMAZING', label: 'Amazing', emoji: '🤩', rgb: [16, 185, 129], hex: '#10b981' },
   { type: 'MIND_BLOWN', label: 'Mind Blown', emoji: '🤯', rgb: [244, 63, 94], hex: '#f43f5e' },
   { type: 'INSPIRED', label: 'Inspired', emoji: '💡', rgb: [139, 92, 246], hex: '#8b5cf6' },
