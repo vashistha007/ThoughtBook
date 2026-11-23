@@ -6,5 +6,8 @@ public enum ReactionType {
     AMAZING,
     MIND_BLOWN,
     INSPIRED,
-    FIRE
+    FIRE,
+    LOVE,
+    RELATABLE,
+    THOUGHTFUL
 }

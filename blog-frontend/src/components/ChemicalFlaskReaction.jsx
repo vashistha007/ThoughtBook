@@ -11,6 +11,9 @@ const REACTIONS = [
   { type: 'MIND_BLOWN', label: 'Mind Blown', emoji: '🤯', rgb: [244, 63, 94], hex: '#f43f5e' },
   { type: 'INSPIRED', label: 'Inspired', emoji: '💡', rgb: [139, 92, 246], hex: '#8b5cf6' },
   { type: 'FIRE', label: 'Fire', emoji: '🔥', rgb: [234, 88, 12], hex: '#ea580c' },
+  { type: 'LOVE', label: 'Love', emoji: '❤️', rgb: [236, 72, 153], hex: '#ec4899' },
+  { type: 'RELATABLE', label: 'Relatable', emoji: '🤝', rgb: [20, 184, 166], hex: '#14b8a6' },
+  { type: 'THOUGHTFUL', label: 'Deep', emoji: '🧠', rgb: [99, 102, 241], hex: '#6366f1' },
 ];
 
 function mixPotionColor(counts, totalCount) {
